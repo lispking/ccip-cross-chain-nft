@@ -3,7 +3,7 @@ import { task } from "hardhat/config";
 import { TaskArguments } from "hardhat/types";
 import { getPayFeesIn, getPrivateKey, getProviderRpcUrl, getRouterConfig } from "./utils";
 import { Wallet, ethers } from "ethers";
-import { SourceMinter, SourceMinter__factory } from "../typechain-types";
+import { SourceMinter, SourceMinter__factory } from "../../typechain-types";
 import { Spinner } from "../utils/spinner";
 import { getCcipMessageId } from "./helpers";
 

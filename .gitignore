@@ -6,4 +6,5 @@ coverage.json
 # Hardhat files
 cache
 /artifacts
-
+dist/
+.DS_Store

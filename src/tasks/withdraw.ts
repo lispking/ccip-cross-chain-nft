@@ -3,7 +3,7 @@ import { TaskArguments } from "hardhat/types";
 import { getPrivateKey, getProviderRpcUrl } from "./utils";
 import { Wallet, ethers } from "ethers";
 import { Spinner } from "../utils/spinner";
-import { Withdraw, Withdraw__factory } from "../typechain-types";
+import { Withdraw, Withdraw__factory } from "../../typechain-types";
 
 task(`withdraw`, `Withdraws tokens and coins from Withdraw.sol. Must be called by an Owner, otherwise it will revert`)
     .addParam(`blockchain`, `The name of the blockchain (for example ethereumSepolia)`)

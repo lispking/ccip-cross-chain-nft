@@ -2,7 +2,7 @@ import { task } from "hardhat/config";
 import { TaskArguments } from "hardhat/types";
 import { getPrivateKey, getProviderRpcUrl, getPayFeesIn } from "./utils";
 import { Wallet, ethers } from "ethers";
-import { IERC20, IERC20__factory } from "../typechain-types";
+import { IERC20, IERC20__factory } from "../../typechain-types";
 import { LINK_ADDRESSES, PayFeesIn } from "./constants";
 import { Spinner } from "../utils/spinner";
 
