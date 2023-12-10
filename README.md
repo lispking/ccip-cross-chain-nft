@@ -1,10 +1,39 @@
 # CCIP Cross Chain NFT
 
-> **Note**
->
-> _This repository represents an example of using a Chainlink product or service. It is provided to help you understand how to interact with Chainlink’s systems so that you can integrate them into your own. This template is provided "AS IS" without warranties of any kind, has not been audited, and may be missing key checks or error handling to make the usage of the product more clear. Take everything in this repository as an example and not something to be copy pasted into a production ready service._
-
 This project demonstrates how to mint an NFT on one blockchain from another blockchain using Chainlink CCIP.
+
+This project consists of four contracts: Withdraw, SourceMinter, DestinationMinter, and MyNFT. The SourceMinter contract is used to transfer assets between blockchains and pay corresponding fees, while the DestinationMinter contract is used to receive cross-chain messages and execute corresponding operations, such as creating non-fungible tokens (NFTs) on the blockchain. The MyNFT contract represents a custom NFT token.
+
+By leveraging Chainlink interfaces and routers, the contracts enable cross-chain communication and payment functions, as well as the creation and transfer of NFTs between different blockchains. This project demonstrates the flexibility and versatility of smart contracts in enabling inter-blockchain asset transfer, message passing, and token creation.
+
+## About Chainlink's Contract
+
+![Key Source](./img/call-chainlink.png)
+
+### Withdraw.sol
+
+This Solidity smart contract code defines a contract named `Withdraw`, which inherits from the `OwnerIsCreator` contract, usually related to the Chainlink Contract Compatibility Interface. The `Withdraw` contract includes two functions: `withdraw` and `withdrawToken`, both of which allow the contract owner to extract assets from the contract.
+1. `withdraw` function: This function allows the contract owner to withdraw Ethereum (ETH) from the contract to a specified beneficiary address. First, it retrieves the contract's current ETH balance, then attempts to send all the balance to the beneficiary address. If the transfer fails, the contract will execute a rollback transaction and report an error, with the error message being `FailedToWithdrawEth`, including the initiator's address, beneficiary address, and the amount of ETH attempted to be withdrawn.
+2. `withdrawToken` function: This function allows the contract owner to withdraw ERC20 standard tokens from the contract to a specified beneficiary address. The function takes two parameters: the beneficiary address and the token contract address. First, it queries the contract's token balance, then sends all the tokens to the beneficiary address by calling the token contract's `transfer` function.
+Both functions are preceded by the `onlyOwner` modifier, which means only the contract owner can call these functions. The purpose of this contract is to allow the owner to extract assets from the contract as needed, whether it's ETH or ERC20 tokens.
+
+### SourceMinter.sol
+
+This Solidity smart contract code defines a contract named `SourceMinter` that inherits from the `Withdraw` contract. The `SourceMinter` contract is mainly used for transferring assets between blockchains and paying the corresponding fees. The contract includes an enumeration type `PayFeesIn` to specify the token type used to pay fees.
+1. Contract Constructor: When the contract is created, it receives two parameters: `router` and `link`, which represent the contract addresses of the router and Chainlink token (LINK), respectively. Then, by calling the `approve` function of `LinkTokenInterface`, it allows the router to withdraw any amount of Chainlink tokens from the contract.
+2. `receive` function: This is an external payable function that allows the contract to receive Ethereum (ETH).
+3. `mint` function: This function is used to create assets on the specified blockchain and pay the corresponding fees. The function receives three parameters: `destinationChainSelector` (the selector of the target blockchain), `receiver` (the receiver's address), and `payFeesIn` (the token type used to pay fees). The function first creates a `Client.EVM2AnyMessage` type message containing the receiver's address, call signature, token amounts, and extra arguments. Then, it retrieves the corresponding fee based on the token type used to pay the fee from the router. Next, according to the fee type, it uses the `ccipSend` function of `IRouterClient` to send the message to the target blockchain. Finally, it triggers a `MessageSent` event using the `emit` keyword, sending the message ID to the blockchain.
+In summary, the `SourceMinter` contract is used to transfer assets between blockchains and pay the corresponding fees. It uses Chainlink interfaces and routers to achieve cross-chain communication and payment functions.
+
+### DestinationMinter.sol
+
+
+This Solidity smart contract code defines a contract named `DestinationMinter` that inherits from the `CCIPReceiver` contract. The `DestinationMinter` contract is mainly used for receiving cross-chain messages and executing corresponding operations, such as creating non-fungible tokens (NFTs) on the blockchain.
+1. Contract Constructor: When the contract is created, it receives two parameters: `router` and `nftAddress`, which represent the contract addresses of the router and custom NFT contract, respectively. Then, by calling the `MyNFT` constructor, it creates a `MyNFT` instance and assigns it to the `nft` variable.
+2. `MintCallSuccessfull` event: This is a custom event used to trigger when creating NFTs successfully.
+3. `_ccipReceive` function: This is an internal override function used to receive cross-chain messages. The function receives a `Client.Any2EVMMessage` type message containing the data to be called. The function first executes the data in the message by calling `address(nft).call(message.data)`. Then, it ensures the call is successful by using `require(success);`. If the call is successful, it triggers the `MintCallSuccessfull` event.
+In summary, the `DestinationMinter` contract is used to receive cross-chain messages and create NFTs on the target blockchain. It uses Chainlink interfaces and routers to implement cross-chain communication and NFT creation functions.
+
 
 ## Prerequisites
 
@@ -35,6 +64,12 @@ npm install
 
 ```
 npx hardhat compile
+```
+
+3. Compile project
+
+```
+npm run build
 ```
 
 ## What is Chainlink CCIP?
