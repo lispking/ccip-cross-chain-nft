@@ -8,7 +8,9 @@ import {MyNFT} from "./MyNFT.sol";
 contract DestinationMinter is CCIPReceiver {
     MyNFT nft;
 
-    event MintCallSuccessfull();
+    event MintCallSuccessfull(address nftAddress);
+
+    error FailedToMintCall(address owner, address nftAddress);
 
     constructor(address router, address nftAddress) CCIPReceiver(router) {
         nft = MyNFT(nftAddress);
@@ -18,7 +20,9 @@ contract DestinationMinter is CCIPReceiver {
         Client.Any2EVMMessage memory message
     ) internal override {
         (bool success, ) = address(nft).call(message.data);
-        require(success);
-        emit MintCallSuccessfull();
+        if (!success) {
+            revert FailedToMintCall(msg.sender, address(nft));
+        }
+        emit MintCallSuccessfull(address(nft));
     }
 }

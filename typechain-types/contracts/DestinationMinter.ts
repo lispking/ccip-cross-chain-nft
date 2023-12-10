@@ -86,9 +86,11 @@ export interface DestinationMinterInterface extends Interface {
 }
 
 export namespace MintCallSuccessfullEvent {
-  export type InputTuple = [];
-  export type OutputTuple = [];
-  export interface OutputObject {}
+  export type InputTuple = [nftAddress: AddressLike];
+  export type OutputTuple = [nftAddress: string];
+  export interface OutputObject {
+    nftAddress: string;
+  }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
   export type Log = TypedEventLog<Event>;
@@ -179,7 +181,7 @@ export interface DestinationMinter extends BaseContract {
   >;
 
   filters: {
-    "MintCallSuccessfull()": TypedContractEvent<
+    "MintCallSuccessfull(address)": TypedContractEvent<
       MintCallSuccessfullEvent.InputTuple,
       MintCallSuccessfullEvent.OutputTuple,
       MintCallSuccessfullEvent.OutputObject

@@ -3,6 +3,7 @@
 /* eslint-disable */
 import type {
   BaseContract,
+  BigNumberish,
   BytesLike,
   FunctionFragment,
   Result,
@@ -36,6 +37,8 @@ export interface WithdrawInterface extends Interface {
     nameOrSignatureOrTopic:
       | "OwnershipTransferRequested"
       | "OwnershipTransferred"
+      | "WithdrawSuccessfull"
+      | "WithdrawTokenSuccessfull"
   ): EventFragment;
 
   encodeFunctionData(
@@ -91,6 +94,49 @@ export namespace OwnershipTransferredEvent {
   export interface OutputObject {
     from: string;
     to: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace WithdrawSuccessfullEvent {
+  export type InputTuple = [
+    owner: AddressLike,
+    target: AddressLike,
+    value: BigNumberish
+  ];
+  export type OutputTuple = [owner: string, target: string, value: bigint];
+  export interface OutputObject {
+    owner: string;
+    target: string;
+    value: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace WithdrawTokenSuccessfullEvent {
+  export type InputTuple = [
+    owner: AddressLike,
+    target: AddressLike,
+    token: AddressLike,
+    value: BigNumberish
+  ];
+  export type OutputTuple = [
+    owner: string,
+    target: string,
+    token: string,
+    value: bigint
+  ];
+  export interface OutputObject {
+    owner: string;
+    target: string;
+    token: string;
+    value: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -201,6 +247,20 @@ export interface Withdraw extends BaseContract {
     OwnershipTransferredEvent.OutputTuple,
     OwnershipTransferredEvent.OutputObject
   >;
+  getEvent(
+    key: "WithdrawSuccessfull"
+  ): TypedContractEvent<
+    WithdrawSuccessfullEvent.InputTuple,
+    WithdrawSuccessfullEvent.OutputTuple,
+    WithdrawSuccessfullEvent.OutputObject
+  >;
+  getEvent(
+    key: "WithdrawTokenSuccessfull"
+  ): TypedContractEvent<
+    WithdrawTokenSuccessfullEvent.InputTuple,
+    WithdrawTokenSuccessfullEvent.OutputTuple,
+    WithdrawTokenSuccessfullEvent.OutputObject
+  >;
 
   filters: {
     "OwnershipTransferRequested(address,address)": TypedContractEvent<
@@ -223,6 +283,28 @@ export interface Withdraw extends BaseContract {
       OwnershipTransferredEvent.InputTuple,
       OwnershipTransferredEvent.OutputTuple,
       OwnershipTransferredEvent.OutputObject
+    >;
+
+    "WithdrawSuccessfull(address,address,uint256)": TypedContractEvent<
+      WithdrawSuccessfullEvent.InputTuple,
+      WithdrawSuccessfullEvent.OutputTuple,
+      WithdrawSuccessfullEvent.OutputObject
+    >;
+    WithdrawSuccessfull: TypedContractEvent<
+      WithdrawSuccessfullEvent.InputTuple,
+      WithdrawSuccessfullEvent.OutputTuple,
+      WithdrawSuccessfullEvent.OutputObject
+    >;
+
+    "WithdrawTokenSuccessfull(address,address,address,uint256)": TypedContractEvent<
+      WithdrawTokenSuccessfullEvent.InputTuple,
+      WithdrawTokenSuccessfullEvent.OutputTuple,
+      WithdrawTokenSuccessfullEvent.OutputObject
+    >;
+    WithdrawTokenSuccessfull: TypedContractEvent<
+      WithdrawTokenSuccessfullEvent.InputTuple,
+      WithdrawTokenSuccessfullEvent.OutputTuple,
+      WithdrawTokenSuccessfullEvent.OutputObject
     >;
   };
 }

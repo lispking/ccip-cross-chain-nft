@@ -15,7 +15,7 @@ contract SourceMinter is Withdraw {
     address immutable i_router;
     address immutable i_link;
 
-    event MessageSent(bytes32 messageId);
+    event MessageSent(address owner, bytes32 messageId);
 
     constructor(address router, address link) {
         i_router = router;
@@ -58,6 +58,6 @@ contract SourceMinter is Withdraw {
             );
         }
 
-        emit MessageSent(messageId);
+        emit MessageSent(msg.sender, messageId);
     }
 }

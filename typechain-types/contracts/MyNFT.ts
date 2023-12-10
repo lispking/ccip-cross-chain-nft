@@ -49,6 +49,7 @@ export interface MyNFTInterface extends Interface {
     nameOrSignatureOrTopic:
       | "Approval"
       | "ApprovalForAll"
+      | "MintNFTSuccessfull"
       | "OwnershipTransferred"
       | "Transfer"
   ): EventFragment;
@@ -189,6 +190,24 @@ export namespace ApprovalForAllEvent {
     owner: string;
     operator: string;
     approved: boolean;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace MintNFTSuccessfullEvent {
+  export type InputTuple = [
+    owner: AddressLike,
+    target: AddressLike,
+    value: BigNumberish
+  ];
+  export type OutputTuple = [owner: string, target: string, value: bigint];
+  export interface OutputObject {
+    owner: string;
+    target: string;
+    value: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -441,6 +460,13 @@ export interface MyNFT extends BaseContract {
     ApprovalForAllEvent.OutputObject
   >;
   getEvent(
+    key: "MintNFTSuccessfull"
+  ): TypedContractEvent<
+    MintNFTSuccessfullEvent.InputTuple,
+    MintNFTSuccessfullEvent.OutputTuple,
+    MintNFTSuccessfullEvent.OutputObject
+  >;
+  getEvent(
     key: "OwnershipTransferred"
   ): TypedContractEvent<
     OwnershipTransferredEvent.InputTuple,
@@ -476,6 +502,17 @@ export interface MyNFT extends BaseContract {
       ApprovalForAllEvent.InputTuple,
       ApprovalForAllEvent.OutputTuple,
       ApprovalForAllEvent.OutputObject
+    >;
+
+    "MintNFTSuccessfull(address,address,uint256)": TypedContractEvent<
+      MintNFTSuccessfullEvent.InputTuple,
+      MintNFTSuccessfullEvent.OutputTuple,
+      MintNFTSuccessfullEvent.OutputObject
+    >;
+    MintNFTSuccessfull: TypedContractEvent<
+      MintNFTSuccessfullEvent.InputTuple,
+      MintNFTSuccessfullEvent.OutputTuple,
+      MintNFTSuccessfullEvent.OutputObject
     >;
 
     "OwnershipTransferred(address,address)": TypedContractEvent<
