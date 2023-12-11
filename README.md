@@ -1,4 +1,4 @@
-# CCIP Cross Chain NFT
+# Cross Chain NFT With Chainlink
 
 This project demonstrates how to mint an NFT on one blockchain from another blockchain using Chainlink CCIP.
 
